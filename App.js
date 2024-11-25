@@ -14,6 +14,7 @@ import StudyScreen from './screens/StudyScreen';
 import CreateDeckScreen from './screens/CreateDeckScreen';
 import StatsScreen from './screens/StatsScreen';
 import DeckStackNavigator from './screens/DeckStackNavigator';
+import ImportScreen from './screens/ImportScreen'; // Dodano ekran importu
 
 const Tab = createBottomTabNavigator();
 const Stack = createNativeStackNavigator();
@@ -48,6 +49,9 @@ export default function App() {
               case 'Stats':
                 iconName = focused ? 'stats-chart' : 'stats-chart-outline';
                 break;
+             case 'Import': // Dodano ikonę dla ekranu Import
+               iconName = focused ? 'cloud-upload' : 'cloud-upload-outline';
+               break;
             }
             return <Ionicons name={iconName} size={size} color={color} />;
           },
@@ -65,7 +69,9 @@ export default function App() {
         <Tab.Screen name="Home" component={HomeScreen} />
         <Tab.Screen name="Decks" component={DeckStackNavigator} />
         <Tab.Screen name="Stats" component={StatsScreen} />
+        <Tab.Screen name="Import" component={ImportScreen} /> 
       </Tab.Navigator>
     </NavigationContainer>
   );
 }
+
