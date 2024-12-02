@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { View, Text, TextInput, Button, FlatList, StyleSheet, Alert } from 'react-native';
+import { View, Text, TextInput, TouchableOpacity, FlatList, StyleSheet, Alert } from 'react-native';
 import { parseFlashcardsFromCSV } from '../utils/importFlashcards';
 
 const ImportScreen = () => {
@@ -28,7 +28,9 @@ const ImportScreen = () => {
         value={csvInput}
         onChangeText={setCsvInput}
       />
-      <Button title="Importuj fiszki" onPress={handleImport} />
+      <TouchableOpacity style={styles.button} onPress={handleImport}>
+        <Text style={styles.buttonText}>Importuj fiszki</Text>
+      </TouchableOpacity>
       <FlatList
         data={flashcards}
         keyExtractor={(item, index) => index.toString()}
@@ -78,7 +80,19 @@ const styles = StyleSheet.create({
   answer: {
     color: '#bbb', // Lighter color for answer text
   },
+  button: {
+    backgroundColor: '#BB86FC',
+    padding: 15,
+    borderRadius: 10,
+    alignItems: 'center',
+    marginVertical: 10,
+  },
+  buttonText: {
+    color: '#FFFFFF',
+    fontSize: 16,
+    textAlign: 'center',
+    fontWeight: '600',
+  },
 });
 
 export default ImportScreen;
-

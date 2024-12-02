@@ -22,8 +22,8 @@ export default function DeckListScreen({ navigation }) {
   // Delete a deck
   const handleDeleteDeck = (deckId) => {
     Alert.alert(
-      'Delete Deck',
-      'Are you sure you want to delete this deck?',
+      'Usuń Talie',
+      'Czy jesteś pewien, że chcesz usunąć tę talie?',
       [
         { text: 'Cancel', style: 'cancel' },
         {
@@ -72,7 +72,7 @@ export default function DeckListScreen({ navigation }) {
         style={styles.createButton}
         onPress={() => navigation.navigate('CreateDeck')}
       >
-        <Text style={styles.buttonText}>Add New Deck</Text>
+        <Text style={styles.buttonText}>Dodaj nową talie</Text>
       </TouchableOpacity>
     </View>
   );

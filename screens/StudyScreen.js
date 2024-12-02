@@ -8,6 +8,7 @@ import {
   Modal,
   Animated,
 } from 'react-native';
+import { saveDecks, getDecks } from '../utils/storage';
 
 export default function StudyScreen({ route }) {
   const { deck: initialDeck } = route.params;
@@ -30,7 +31,7 @@ export default function StudyScreen({ route }) {
     }).start();
   };
 
-  const handleResponse = (quality) => {
+  const handleResponse = async (quality) => {
     const card = deck.cards[currentCardIndex];
     let newBox = card.box;
 
@@ -50,9 +51,14 @@ export default function StudyScreen({ route }) {
     setCurrentCardIndex((prev) => (prev + 1) % deck.cards.length);
     setIsShowingAnswer(false);
     flipAnim.setValue(0);
+
+    // Save the updated deck to storage
+    const existingDecks = await getDecks();
+    const updatedDecks = existingDecks.map(d => d.id === updatedDeck.id ? updatedDeck : d);
+    await saveDecks(updatedDecks);
   };
 
-  const addCard = () => {
+  const addCard = async () => {
     if (newFront && newBack) {
       const newCard = {
         id: Date.now(),
@@ -67,6 +73,11 @@ export default function StudyScreen({ route }) {
       setNewFront('');
       setNewBack('');
       setIsModalVisible(false);
+
+      // Save the updated deck to storage
+      const existingDecks = await getDecks();
+      const updatedDecks = existingDecks.map(d => d.id === updatedDeck.id ? updatedDeck : d);
+      await saveDecks(updatedDecks);
     }
   };
 
@@ -90,14 +101,14 @@ export default function StudyScreen({ route }) {
             ? isShowingAnswer
               ? deck.cards[currentCardIndex]?.back
               : deck.cards[currentCardIndex]?.front
-            : 'No cards available!'}
+            : 'Brak kart w talii'}
         </Text>
       </Animated.View>
 
       {deck.cards.length > 0 && (
         <TouchableOpacity style={styles.flipButton} onPress={flipCard}>
           <Text style={styles.buttonText}>
-            Show {isShowingAnswer ? 'Question' : 'Answer'}
+            Pokaż {isShowingAnswer ? 'Pytanie' : 'Odpowiedź'}
           </Text>
         </TouchableOpacity>
       )}
@@ -108,13 +119,13 @@ export default function StudyScreen({ route }) {
             style={[styles.responseButton, styles.hardButton]}
             onPress={() => handleResponse('bad')}
           >
-            <Text style={styles.buttonText}>Hard</Text>
+            <Text style={styles.buttonText}>Trudne</Text>
           </TouchableOpacity>
           <TouchableOpacity
             style={[styles.responseButton, styles.easyButton]}
             onPress={() => handleResponse('good')}
           >
-            <Text style={styles.buttonText}>Easy</Text>
+            <Text style={styles.buttonText}>Łatwe</Text>
           </TouchableOpacity>
         </View>
       )}
@@ -123,14 +134,14 @@ export default function StudyScreen({ route }) {
         style={styles.addButton}
         onPress={() => setIsModalVisible(true)}
       >
-        <Text style={styles.buttonText}>Add Card</Text>
+        <Text style={styles.buttonText}>Dodaj karte</Text>
       </TouchableOpacity>
 
       {/* Modal for Adding Cards */}
       <Modal visible={isModalVisible} transparent={true} animationType="slide">
         <View style={styles.modalContainer}>
           <View style={styles.modalContent}>
-            <Text style={styles.modalTitle}>Add a New Card</Text>
+            <Text style={styles.modalTitle}>Dodaj Nową Karte</Text>
             <TextInput
               style={styles.input}
               placeholder="Front Text"
@@ -150,10 +161,10 @@ export default function StudyScreen({ route }) {
                 style={styles.modalButton}
                 onPress={() => setIsModalVisible(false)}
               >
-                <Text style={styles.buttonText}>Cancel</Text>
+                <Text style={styles.buttonText}>Anuluj</Text>
               </TouchableOpacity>
               <TouchableOpacity style={styles.modalButton} onPress={addCard}>
-                <Text style={styles.buttonText}>Add</Text>
+                <Text style={styles.buttonText}>Dodaj</Text>
               </TouchableOpacity>
             </View>
           </View>
@@ -233,7 +244,8 @@ const styles = StyleSheet.create({
     backgroundColor: '#1E1E1E',
     padding: 20,
     borderRadius: 10,
-    width: '80%',
+    width: '90%', // Increase the width
+    // height: '50%', // Increase the height
   },
   modalTitle: {
     fontSize: 18,

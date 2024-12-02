@@ -1,4 +1,5 @@
 import Papa from 'papaparse';
+import { StyleSheet } from 'react-native';
 
 /**
  * 
@@ -8,7 +9,7 @@ import Papa from 'papaparse';
 export const parseFlashcardsFromCSV = (csvData) => {
   const parsed = Papa.parse(csvData, { header: true, skipEmptyLines: true });
   if (parsed.errors.length) {
-    console.error('Błędy parsowania CSV:', parsed.errors);
+    console.error('CSV Parsing Errors:', parsed.errors);
     return [];
   }
 

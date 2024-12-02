@@ -14,12 +14,12 @@ export default function HomeScreen({ navigation }) {
         >
           <Text style={styles.buttonText}>Rozpocznij naukę</Text>
         </TouchableOpacity>
-        <TouchableOpacity 
+        {/* <TouchableOpacity 
           style={[styles.actionButton, styles.secondaryButton]}
           onPress={() => navigation.navigate('CreateDeck')}
         >
           <Text style={styles.buttonText}>Stwórz nowy zestaw</Text>
-        </TouchableOpacity>
+        </TouchableOpacity> */}
       </View>
     </ScrollView>
   );
