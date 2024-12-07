@@ -29,7 +29,7 @@ export default function DeckStackNavigator() {
         name="Study"
         component={StudyScreen}
         options={({ route }) => ({
-          title: `Nauka: ${route.params.deck.name}`,
+          title: `Zestaw: ${route.params.deck.name}`,
         })}
       />
     </Stack.Navigator>
