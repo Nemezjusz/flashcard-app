@@ -1,16 +1,30 @@
 import React, { useState } from 'react';
 import { View, Text, TextInput, TouchableOpacity, FlatList, StyleSheet, Alert } from 'react-native';
 import { parseFlashcardsFromCSV } from '../utils/importFlashcards';
+import { getDecks, saveDecks } from '../utils/storage';
+import { Deck } from '../models/Flashcard';
 
 const ImportScreen = () => {
   const [csvInput, setCsvInput] = useState('');
   const [flashcards, setFlashcards] = useState([]);
 
-  const handleImport = () => {
+  const handleImport = async () => {
     try {
-      const importedFlashcards = parseFlashcardsFromCSV(csvInput);
-      setFlashcards(importedFlashcards);
-      Alert.alert('Sukces', `${importedFlashcards.length} fiszek zaimportowano pomyślnie!`);
+      const importedDecks = parseFlashcardsFromCSV(csvInput);
+      const existingDecks = await getDecks();
+
+      for (const [deckName, cards] of Object.entries(importedDecks)) {
+        let deck = existingDecks.find(d => d.name === deckName);
+        if (!deck) {
+          deck = new Deck(deckName);
+          existingDecks.push(deck);
+        }
+        cards.forEach(card => deck.addCard(card.question, card.answer));
+      }
+
+      await saveDecks(existingDecks);
+      setFlashcards(Object.values(importedDecks).flat());
+      Alert.alert('Sukces', 'Fiszki zaimportowano pomyślnie!');
     } catch (error) {
       Alert.alert('Błąd', 'Wystąpił problem z importowaniem fiszek. Upewnij się, że format CSV jest poprawny.');
       console.error(error);
